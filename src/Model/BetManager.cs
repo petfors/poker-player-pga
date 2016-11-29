@@ -86,7 +86,8 @@ namespace Nancy.Simple.Model
             return 0;
         }
 
-        private int GetFlopBet(HandResult ourHand)
+
+        private int GetFlopBet(HandResult ourHand, int bettingIndex)
         {
             if (ourHand.Hand == Hand.StraightFlush)
             {
@@ -120,16 +121,19 @@ namespace Nancy.Simple.Model
             {
                 if (ourHand.Cards.Max(c => c.RankValue) >= 10)
                 {
-                    return _game.MinBet;
+                    if (bettingIndex <= 3)
+                    {
+                        return _game.MinRaise;
+                    }
                 }
 
-                return 0;
+                return _game.MinBet;
             }
 
             return 0;
         }
 
-        private int GetTurnBet(HandResult ourHand)
+        private int GetTurnBet(HandResult ourHand, int bettingIndex)
         {
             if (ourHand.Hand == Hand.StraightFlush)
             {
@@ -163,16 +167,19 @@ namespace Nancy.Simple.Model
             {
                 if (ourHand.Cards.Max(c => c.RankValue) >= 10)
                 {
-                    return _game.MinBet;
+                    if (bettingIndex <= 3)
+                    {
+                        return _game.MinRaise;
+                    }
                 }
 
-                return 0;
+                return _game.MinBet;
             }
 
             return 0;
         }
 
-        private int GetRiverBet(HandResult ourHand)
+        private int GetRiverBet(HandResult ourHand, int bettingIndex)
         {
             if (ourHand.Hand == Hand.StraightFlush)
             {
@@ -206,10 +213,13 @@ namespace Nancy.Simple.Model
             {
                 if (ourHand.Cards.Max(c => c.RankValue) >= 10)
                 {
-                    return _game.MinBet;
+                    if (bettingIndex <= 3)
+                    {
+                        return _game.MinRaise;
+                    }
                 }
 
-                return 0;
+                return _game.MinBet;
             }
 
             return 0;
@@ -223,15 +233,15 @@ namespace Nancy.Simple.Model
             }
             if (bettingRound == BettingRound.Flop)
             {
-                return GetFlopBet(ourHand);
+                return GetFlopBet(ourHand, _game.BettingIndex);
             }
             if (bettingRound == BettingRound.Turn)
             {
-                return GetTurnBet(ourHand);
+                return GetTurnBet(ourHand, _game.BettingIndex);
             }
             if (bettingRound == BettingRound.River)
             {
-                return GetRiverBet(ourHand);
+                return GetRiverBet(ourHand, _game.BettingIndex);
             }
 
             return 0;
