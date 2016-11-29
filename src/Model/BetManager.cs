@@ -56,7 +56,7 @@ namespace Nancy.Simple.Model
                 {
                     if (bettingIndex <= 3)
                     {
-                        return _game.MinRaise;
+                        return GetMinRaiseTimes(10);
                     }
                     else
                     {
