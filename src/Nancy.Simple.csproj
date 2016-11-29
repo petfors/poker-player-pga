@@ -70,12 +70,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Card.cs" />
+    <Compile Include="Model\Data\Card.cs" />
+    <Compile Include="Model\EvaluatedCard.cs" />
     <Compile Include="Model\Game.cs" />
-    <Compile Include="Model\GameState.cs" />
+    <Compile Include="Model\Data\GameState.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="App.cs" />
-    <Compile Include="Model\Player.cs" />
+    <Compile Include="Model\Data\Player.cs" />
+    <Compile Include="Model\Hand.cs" />
+    <Compile Include="Model\HandManager.cs" />
+    <Compile Include="Model\HandResult.cs" />
     <Compile Include="PokerPlayer.cs" />
   </ItemGroup>
   <ItemGroup>

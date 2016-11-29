@@ -6,7 +6,7 @@ namespace Nancy.Simple
 {
     public static class PokerPlayer
     {
-        public static readonly string VERSION = "1.0";
+        public static readonly string VERSION = "2.0";
 
         public static int BetRequest(JObject gameState)
         {
@@ -14,12 +14,23 @@ namespace Nancy.Simple
             {
                 var gameStateObject = gameState.ToObject<GameState>();
                 var game = new Game(gameStateObject);
-                return game.MinBet;
+
+                var handManager = new HandManager();
+                var ourHand = handManager.EvaluateHand(game.OurPlayer.hole_cards);
+
+                if (ourHand.Hand == Hand.Pair)
+                {
+                    return game.MaxBet;
+                }
+                else
+                {
+                    return 0;
+                }
             }
             catch (Exception ex)
             {
-                
-                throw;
+                Console.Error.Write(String.Concat(ex.Message, ex.StackTrace));
+                return 0;
             }
 		}
 
