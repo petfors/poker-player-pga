@@ -45,6 +45,10 @@ namespace Nancy.Simple.Model
             get { return _gameState.players.Count(p => p.status == "active"); }
         }
 
+        public IEnumerable<Player> OtherAllInPlayers
+        {
+            get { return _gameState.players.Where(p => p.stack == 0 && p.status == "active"); }
+        }
 
         public int MaxBet
         {

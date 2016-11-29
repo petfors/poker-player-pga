@@ -37,7 +37,7 @@ namespace Nancy.Simple.Model
         }
 
 
-        private int GetPreFlopBet(HandResult ourHand, int stackSize)
+        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers)
         {
             if (ourHand.Hand == Hand.Pair)
             {
@@ -56,15 +56,21 @@ namespace Nancy.Simple.Model
                 var highestCard = ourHand.Cards.FirstOrDefault();
                 if (highestCard != null && highestCard.RankValue >= 12)
                 {
-                    var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
-                    if (percentageOfStack < 20)
+                    if (allInPlayers <= 0)
                     {
-                        return _game.MinBet;
+                        var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
+
+                        if (percentageOfStack < 20)
+                        {
+                            return _game.MinBet;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
                     }
-                    else
-                    {
-                        return 0;
-                    }
+
+                    return 0;
                 }
 
                 return 0;
@@ -202,11 +208,11 @@ namespace Nancy.Simple.Model
             return 0;
         }
 
-        private int GetCurrentBet(BettingRound bettingRound, HandResult ourHand)
+        private int GetCurrentBet(BettingRound bettingRound, HandResult ourHand, IEnumerable<Player> allinPlayers)
         {
             if (bettingRound == BettingRound.PreFlop)
             {
-                return GetPreFlopBet(ourHand, _game.OurPlayer.stack);
+                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers);
             }
             if (bettingRound == BettingRound.Flop)
             {
@@ -229,8 +235,9 @@ namespace Nancy.Simple.Model
         {
             var bettingRound = GetBettingRound(cards);
             var ourHand = _handManager.EvaluateHand(cards);
+            var allInPlayers = _game.OtherAllInPlayers;
 
-            return GetCurrentBet(bettingRound, ourHand);
+            return GetCurrentBet(bettingRound, ourHand, allInPlayers);
         }
     }
 }
