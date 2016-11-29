@@ -110,7 +110,7 @@ namespace Nancy.Simple.Model
                     return _game.MinBet;
                 }
 
-                return _game.MinBet;
+                return 0;
             }
 
             return 0;
@@ -150,10 +150,10 @@ namespace Nancy.Simple.Model
             {
                 if (ourHand.Cards.Max(c => c.RankValue) >= 10)
                 {
-                    return _game.MinRaise;
+                    return _game.MinBet;
                 }
 
-                return _game.MinBet;
+                return 0;
             }
 
             return 0;
@@ -193,7 +193,7 @@ namespace Nancy.Simple.Model
             {
                 if (ourHand.Cards.Max(c => c.RankValue) >= 10)
                 {
-                    return _game.MinRaise;
+                    return _game.MinBet;
                 }
 
                 return 0;

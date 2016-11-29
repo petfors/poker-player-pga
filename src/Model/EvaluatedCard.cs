@@ -23,6 +23,11 @@ namespace Nancy.Simple.Model
             }
         }
 
+        public string CardAsString
+        {
+            get { return String.Concat(_rankValue.ToString(), _suitValue); }
+        }
+
         private int ParseRank(string rank)
         {
             switch (rank)

@@ -71,7 +71,8 @@ namespace Nancy.Simple.Model
         private IEnumerable<EvaluatedCard> TwoPairs(IEnumerable<EvaluatedCard> cards)
         {
             var maxPair = Pair(cards);
-            var remainingCards = cards.Except(maxPair);
+            var maxPairCards = maxPair.Select(c => c.CardAsString);
+            var remainingCards = cards.Where(c => !maxPairCards.Contains(c.CardAsString));
             var lowPair = Pair(remainingCards);
 
             if (maxPair.Any() && lowPair.Any())
@@ -102,9 +103,11 @@ namespace Nancy.Simple.Model
         private IEnumerable<EvaluatedCard> FullHouse(IEnumerable<EvaluatedCard> cards)
         {
             var threeOfAKind = ThreeOfAKind(cards);
+            var threeOfAKindCards = threeOfAKind.Select(c => c.CardAsString);
             if (threeOfAKind.Any())
             {
-                var remainingCards = cards.Except(threeOfAKind);
+                var remainingCards = cards.Where(c => !threeOfAKindCards.Contains(c.CardAsString));
+                //var remainingCards = cards.Except(threeOfAKind);
                 var pair = Pair(remainingCards);
                 if (pair.Any())
                 {
