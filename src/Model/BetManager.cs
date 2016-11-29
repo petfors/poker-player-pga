@@ -60,18 +60,18 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.HighCard)
             {
-                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize);
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers);
             }
 
             return 0;
         }
 
-        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize)
+        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers)
         {
             var highestCard = ourHand.Cards.FirstOrDefault();
             if (highestCard != null && highestCard.RankValue >= 13)
             {
-                if (allInPlayers <= 0)
+                if (allInPlayers <= 0 && activePlayers <= 3)
                 {
                     var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
 
@@ -120,6 +120,10 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
+                if (bettingIndex <= 3)
+                {
+                    return _game.MinRaise;
+                }
                 return _game.MinBet;
             }
             if (ourHand.Hand == Hand.Pair)
@@ -136,7 +140,7 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.HighCard)
             {
-                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize);
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers);
             }
 
             return 0;
@@ -170,7 +174,11 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
-                return _game.MinRaise;
+                if (bettingIndex <= 3)
+                {
+                    return _game.MinRaise;
+                }
+                return _game.MinBet;
             }
             if (ourHand.Hand == Hand.Pair)
             {
@@ -216,7 +224,11 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
-                return _game.MinRaise;
+                if (bettingIndex <= 3)
+                {
+                    return _game.MinRaise;
+                }
+                return _game.MinBet;
             }
             if (ourHand.Hand == Hand.Pair)
             {
