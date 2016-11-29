@@ -105,23 +105,44 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.FourOfAKind)
             {
-                return _game.MaxBet;
+                return GetMinRaiseTimes(10);
             }
             if (ourHand.Hand == Hand.FullHouse)
             {
-                return _game.MaxBet;
+                return GetMinRaiseTimes(8);
             }
             if (ourHand.Hand == Hand.Flush)
             {
-                return _game.MaxBet;
+                if (bettingIndex <= 1)
+                {
+                    return GetMinRaiseTimes(8);
+                }
+                else
+                {
+                    return _game.MinBet;
+                }
             }
             if (ourHand.Hand == Hand.Straight)
             {
-                return GetMinRaiseTimes(4);
+                if (bettingIndex <= 1)
+                {
+                    return GetMinRaiseTimes(8);
+                }
+                else
+                {
+                    return _game.MinBet;
+                }
             }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
-                return GetMinRaiseTimes(4);
+                if (bettingIndex <= 1)
+                {
+                    return GetMinRaiseTimes(4);
+                }
+                else
+                {
+                    return _game.MinBet;
+                }
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
@@ -167,11 +188,25 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.Flush)
             {
-                return _game.MaxBet;
+                if (bettingIndex <= 1)
+                {
+                    return GetMinRaiseTimes(10);
+                }
+                else
+                {
+                    return _game.MinBet;
+                }
             }
             if (ourHand.Hand == Hand.Straight)
             {
-                return _game.MaxBet;
+                if (bettingIndex <= 1)
+                {
+                    return GetMinRaiseTimes(10);
+                }
+                else
+                {
+                    return _game.MinBet;
+                }
             }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
