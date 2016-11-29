@@ -17,6 +17,13 @@ namespace Nancy.Simple.Model
                 return new HandResult() {Cards = flush, Hand = Hand.Flush};
             }
 
+            var straight = Straight(evaluatedCard);
+            if (straight.Any())
+            {
+                return new HandResult() { Cards = straight, Hand = Hand.Straight };
+            }
+
+
             var maxFourOfAKind = FourOfAKind(evaluatedCard);
             if (maxFourOfAKind.Any())
             {
@@ -50,6 +57,34 @@ namespace Nancy.Simple.Model
             {
                 return flushCardGroups.First().ToList();
             }
+
+            return new List<EvaluatedCard>();
+        }
+
+        private IEnumerable<EvaluatedCard> Straight(IEnumerable<EvaluatedCard> cards)
+        {
+            var orderedStraightCards = cards.OrderByDescending(c => c.RankValue);
+            var straightCards = new List<EvaluatedCard>();
+            straightCards.Add(orderedStraightCards.First());
+            var remainingOrderedCards = orderedStraightCards.Skip(1);
+
+            foreach (var currentCard in remainingOrderedCards)
+            {
+                if (currentCard.RankValue == (straightCards.Last().RankValue - 1))
+                {
+                    straightCards.Add(currentCard);
+                }
+                else
+                {
+                    straightCards.Clear();
+                    straightCards.Add(currentCard);
+                }
+            }
+
+            if (straightCards.Count >= 5)
+            {
+                return straightCards;
+            }         
 
             return new List<EvaluatedCard>();
         }

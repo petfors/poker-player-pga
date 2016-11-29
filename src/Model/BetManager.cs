@@ -68,6 +68,10 @@ namespace Nancy.Simple.Model
             {
                 return _game.MaxBet;
             }
+            if (ourHand.Hand == Hand.Straight)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
                 return _game.MaxBet;
@@ -95,6 +99,10 @@ namespace Nancy.Simple.Model
             {
                 return _game.MaxBet;
             }
+            if (ourHand.Hand == Hand.Straight)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
                 return _game.MaxBet;
@@ -119,6 +127,10 @@ namespace Nancy.Simple.Model
                 return _game.MaxBet;
             }
             if (ourHand.Hand == Hand.Flush)
+            {
+                return _game.MaxBet;
+            }
+            if (ourHand.Hand == Hand.Straight)
             {
                 return _game.MaxBet;
             }
