@@ -8,7 +8,7 @@ namespace Nancy.Simple
 {
     public static class PokerPlayer
     {
-        public static readonly string VERSION = "Money Stealer";
+        public static readonly string VERSION = "6.5";
 
         public static int BetRequest(JObject gameState)
         {

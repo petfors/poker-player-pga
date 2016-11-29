@@ -75,7 +75,7 @@ namespace Nancy.Simple.Model
             return 0;
         }
 
-        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers, int bettingIndex, bool isBlind = false, bool isSameSuit = false)
+        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers, int bettingIndex, bool isBlind, bool isSameSuit)
         {
             var highestCard = ourHand.Cards.FirstOrDefault();
             var secondHighCard = ourHand.Cards.Skip(1).FirstOrDefault();
