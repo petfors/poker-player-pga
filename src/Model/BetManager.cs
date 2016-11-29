@@ -71,7 +71,7 @@ namespace Nancy.Simple.Model
             var highestCard = ourHand.Cards.FirstOrDefault();
             if (highestCard != null && highestCard.RankValue >= 13)
             {
-                if (allInPlayers <= 0 && activePlayers <= 3)
+                if (allInPlayers <= 0 && activePlayers <= 6)
                 {
                     var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
 
