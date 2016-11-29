@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\BetManager.cs" />
     <Compile Include="Model\Data\Card.cs" />
     <Compile Include="Model\EvaluatedCard.cs" />
     <Compile Include="Model\Game.cs" />
