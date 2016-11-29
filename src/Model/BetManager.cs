@@ -212,7 +212,7 @@ namespace Nancy.Simple.Model
         {
             if (bettingRound == BettingRound.PreFlop)
             {
-                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers);
+                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count());
             }
             if (bettingRound == BettingRound.Flop)
             {
