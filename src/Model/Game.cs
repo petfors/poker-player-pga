@@ -14,11 +14,30 @@ namespace Nancy.Simple.Model
             _gameState = gameState;
         }
 
-        public Player OurPlayer => _gameState.players[_gameState.in_action];
+        public Player OurPlayer
+        {
+            get
+            {
+                return _gameState.players[_gameState.in_action];
+            }
+        }
 
-        public int MinBet => _gameState.current_buy_in - OurPlayer.bet;
+        public int MinBet
+        {
+            get
+            {
+                return _gameState.current_buy_in - OurPlayer.bet;
+            }
+        }
+       
 
-        public int MaxBet => OurPlayer.stack;
+        public int MaxBet
+        {
+            get
+            {
+                return OurPlayer.stack;
+            }
+        }
 
         public int MinRaise
         {
