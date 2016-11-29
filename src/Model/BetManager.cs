@@ -75,7 +75,7 @@ namespace Nancy.Simple.Model
                 {
                     var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
 
-                    if (percentageOfStack < 20)
+                    if (percentageOfStack < 50)
                     {
                         return _game.MinBet;
                     }
