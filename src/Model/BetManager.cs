@@ -44,14 +44,14 @@ namespace Nancy.Simple.Model
 
         }
 
-        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex, int activePlayers)
+        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex, int activePlayers, bool isBlind)
         {
             if (ourHand.Hand == Hand.Pair)
             {
                 var pairRank = ourHand.Cards.Max(c => c.RankValue);
                 if (pairRank >= 10)
                 {
-                    return GetMinRaiseTimes(4);
+                    return _game.MaxBet;
                 }
                 else
                 {
@@ -69,13 +69,13 @@ namespace Nancy.Simple.Model
             {
                 var isSameSuit = IsSameSuit(ourHand.Cards);
 
-                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers, bettingIndex, isSameSuit);
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers, bettingIndex, isBlind, isSameSuit);
             }
 
             return 0;
         }
 
-        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers, int bettingIndex, bool isSameSuit = false)
+        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers, int bettingIndex, bool isBlind = false, bool isSameSuit = false)
         {
             var highestCard = ourHand.Cards.FirstOrDefault();
             var secondHighCard = ourHand.Cards.Skip(1).FirstOrDefault();
@@ -143,8 +143,16 @@ namespace Nancy.Simple.Model
                         return _game.MinBet;
                     }
                 }
+            }
 
-                return 0;
+            // we have crappy cards
+            if (isBlind)
+            {
+                var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
+                if (percentageOfStack < 5)
+                {
+                    return _game.MinBet;
+                }
             }
 
             return 0;
@@ -153,6 +161,11 @@ namespace Nancy.Simple.Model
         private int GetMinRaiseTimes(int times)
         {
             return Math.Min(_game.MaxBet, _game.MinRaise* times);
+        }
+
+        private bool HasPlacedBlind()
+        {
+            return _game.OurPlayer.bet > 0;
         }
 
 
@@ -225,7 +238,7 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.HighCard)
             {
-                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers, bettingIndex, false);
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers, bettingIndex, false, false);
             }
 
             return 0;
@@ -349,7 +362,8 @@ namespace Nancy.Simple.Model
         {
             if (bettingRound == BettingRound.PreFlop)
             {
-                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex, _game.ActivePlayers);
+                var isBlind = HasPlacedBlind();
+                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex, _game.ActivePlayers, isBlind);
             }
             if (bettingRound == BettingRound.Flop)
             {
