@@ -34,7 +34,17 @@ namespace Nancy.Simple.Model
                 return _gameState.current_buy_in - OurPlayer.bet;
             }
         }
-       
+
+        public int CurrentPotSize
+        {
+            get { return _gameState.pot; }
+        }
+
+        public int ActivePlayers
+        {
+            get { return _gameState.players.Count(p => p.status == "active"); }
+        }
+
 
         public int MaxBet
         {

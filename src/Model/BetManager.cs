@@ -30,7 +30,14 @@ namespace Nancy.Simple.Model
             return BettingRound.PreFlop;
         }
 
-        private int GetPreFlopBet(HandResult ourHand)
+        private double MinBetPercentageOfStack(int minBet, int stackSize)
+        {
+           var percentage = ((double) minBet / (double) stackSize);
+            return percentage * 100;
+        }
+
+
+        private int GetPreFlopBet(HandResult ourHand, int stackSize)
         {
             if (ourHand.Hand == Hand.Pair)
             {
@@ -49,7 +56,15 @@ namespace Nancy.Simple.Model
                 var highestCard = ourHand.Cards.FirstOrDefault();
                 if (highestCard != null && highestCard.RankValue >= 12)
                 {
-                    return _game.MinRaise;
+                    var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
+                    if (percentageOfStack < 20)
+                    {
+                        return _game.MinBet;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
 
                 return 0;
@@ -86,13 +101,13 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
-                return _game.MinRaise;
+                return _game.MinBet;
             }
             if (ourHand.Hand == Hand.Pair)
             {
                 if (ourHand.Cards.Max(c => c.RankValue) >= 10)
                 {
-                    return _game.MinRaise;
+                    return _game.MinBet;
                 }
 
                 return _game.MinBet;
@@ -191,7 +206,7 @@ namespace Nancy.Simple.Model
         {
             if (bettingRound == BettingRound.PreFlop)
             {
-                return GetPreFlopBet(ourHand);
+                return GetPreFlopBet(ourHand, _game.OurPlayer.stack);
             }
             if (bettingRound == BettingRound.Flop)
             {
