@@ -44,7 +44,7 @@ namespace Nancy.Simple.Model
                 var pairRank = ourHand.Cards.Max(c => c.RankValue);
                 if (pairRank >= 10)
                 {
-                    return _game.MaxBet;
+                    return Math.Min(_game.MinRaise * 4, _game.MaxBet);
                 }
                 else
                 {
