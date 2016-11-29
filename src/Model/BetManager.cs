@@ -60,24 +60,29 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.HighCard)
             {
-                var highestCard = ourHand.Cards.FirstOrDefault();
-                if (highestCard != null && highestCard.RankValue >= 12)
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize);
+            }
+
+            return 0;
+        }
+
+        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize)
+        {
+            var highestCard = ourHand.Cards.FirstOrDefault();
+            if (highestCard != null && highestCard.RankValue >= 13)
+            {
+                if (allInPlayers <= 0)
                 {
-                    if (allInPlayers <= 0)
+                    var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
+
+                    if (percentageOfStack < 20)
                     {
-                        var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
-
-                        if (percentageOfStack < 20)
-                        {
-                            return _game.MinBet;
-                        }
-                        else
-                        {
-                            return 0;
-                        }
+                        return _game.MinBet;
                     }
-
-                    return 0;
+                    else
+                    {
+                        return 0;
+                    }
                 }
 
                 return 0;
@@ -87,7 +92,7 @@ namespace Nancy.Simple.Model
         }
 
 
-        private int GetFlopBet(HandResult ourHand, int bettingIndex)
+        private int GetFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex)
         {
             if (ourHand.Hand == Hand.StraightFlush)
             {
@@ -128,6 +133,10 @@ namespace Nancy.Simple.Model
                 }
 
                 return _game.MinBet;
+            }
+            if (ourHand.Hand == Hand.HighCard)
+            {
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize);
             }
 
             return 0;
@@ -233,7 +242,7 @@ namespace Nancy.Simple.Model
             }
             if (bettingRound == BettingRound.Flop)
             {
-                return GetFlopBet(ourHand, _game.BettingIndex);
+                return GetFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex);
             }
             if (bettingRound == BettingRound.Turn)
             {
