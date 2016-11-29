@@ -44,7 +44,7 @@ namespace Nancy.Simple.Model
                 var pairRank = ourHand.Cards.Max(c => c.RankValue);
                 if (pairRank >= 10)
                 {
-                    return Math.Min(_game.MinRaise * 4, _game.MaxBet);
+                    return GetMinRaiseTimes(4);
                 }
                 else
                 {
@@ -91,6 +91,11 @@ namespace Nancy.Simple.Model
             return 0;
         }
 
+        private int GetMinRaiseTimes(int times)
+        {
+            return Math.Min(_game.MaxBet, _game.MinRaise* times);
+        }
+
 
         private int GetFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex, int activePlayers)
         {
@@ -112,11 +117,11 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.Straight)
             {
-                return _game.MaxBet;
+                return GetMinRaiseTimes(4);
             }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
-                return _game.MinRaise;
+                return GetMinRaiseTimes(4);
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
