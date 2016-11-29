@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 
@@ -102,7 +103,20 @@ namespace Nancy.Simple.Model
                 }
             }
 
-            if (highestCard != null && highestCard.RankValue >= 13)
+            if (highestCard != null && secondHighCard != null && highestCard.RankValue >= 11)
+            {
+                if (isSameSuit)
+                {
+                    if (bettingIndex <= 3)
+                    {
+                        return GetMinRaiseTimes(2);
+                    }
+
+                    return _game.MinBet;
+                }
+            }
+
+            if (highestCard != null && highestCard.RankValue >= 12)
             {
                 if (allInPlayers <= 0 && activePlayers <= 6)
                 {
