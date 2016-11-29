@@ -22,36 +22,6 @@ namespace Nancy.Simple
                 var currentBet = betManager.GetCurrentBet(game.OurCards);
 
                 return currentBet;
-
-                //var handManager = new HandManager();
-                //var ourHand = handManager.EvaluateHand(game.OurPlayer.hole_cards);
-
-                //if (ourHand.Hand == Hand.Pair)
-                //{
-                //    var pairRank = ourHand.Cards.Max(c => c.RankValue);
-                //    if (pairRank >= 10)
-                //    {
-                //        return game.MaxBet;
-                //    }
-                //    else
-                //    {
-                //        return game.MinRaise;
-                //    }
-                //}
-                //else if(ourHand.Hand == Hand.HighCard)
-                //{
-                //    var highestCard = ourHand.Cards.FirstOrDefault();
-                //    if (highestCard != null && highestCard.RankValue >= 12)
-                //    {
-                //        return game.MinRaise;
-                //    }
-
-                //    return 0;
-                //}
-                //else
-                //{
-                //    return 0;
-                //}
             }
             catch (Exception ex)
             {

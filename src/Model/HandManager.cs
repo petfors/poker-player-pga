@@ -11,6 +11,13 @@ namespace Nancy.Simple.Model
         {
             var evaluatedCard = cards.Select(c => new EvaluatedCard(c));
 
+
+            var fullHouse = FullHouse(evaluatedCard);
+            if (fullHouse.Any())
+            {
+                return new HandResult() { Cards = fullHouse, Hand = Hand.FullHouse};
+            }
+
             var flush = Flush(evaluatedCard);
             if (flush.Any())
             {
@@ -48,6 +55,22 @@ namespace Nancy.Simple.Model
                 Cards = new List<EvaluatedCard>() { evaluatedCard.OrderByDescending(c => c.RankValue).First() },
                 Hand = Hand.HighCard
             };
+        }
+
+        private IEnumerable<EvaluatedCard> FullHouse(IEnumerable<EvaluatedCard> cards)
+        {
+            var threeOfAKind = ThreeOfAKind(cards);
+            if (threeOfAKind.Any())
+            {
+                var remainingCards = cards.Except(threeOfAKind);
+                var pair = Pair(remainingCards);
+                if (pair.Any())
+                {
+                    return Enumerable.Concat(threeOfAKind, pair);
+                }
+            }
+
+            return new List<EvaluatedCard>();
         }
 
         private IEnumerable<EvaluatedCard> Flush(IEnumerable<EvaluatedCard> cards)
@@ -88,17 +111,6 @@ namespace Nancy.Simple.Model
 
             return new List<EvaluatedCard>();
         }
-
-        //private IEnumerable<EvaluatedCard> Straight(IEnumerable<EvaluatedCard> cards)
-        //{
-        //    var flushCardGroups = cards.GroupBy(c => c.Suit).Where(g => g.ToList().Count >= 5);
-        //    if (flushCardGroups.Any())
-        //    {
-        //        return flushCardGroups.First().ToList();
-        //    }
-
-        //    return new List<EvaluatedCard>();
-        //}
 
         private IEnumerable<EvaluatedCard> FourOfAKind(IEnumerable<EvaluatedCard> cards)
         {

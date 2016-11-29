@@ -64,6 +64,10 @@ namespace Nancy.Simple.Model
             {
                 return _game.MaxBet;
             }
+            if (ourHand.Hand == Hand.FullHouse)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.Flush)
             {
                 return _game.MaxBet;
@@ -95,6 +99,10 @@ namespace Nancy.Simple.Model
             {
                 return _game.MaxBet;
             }
+            if (ourHand.Hand == Hand.FullHouse)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.Flush)
             {
                 return _game.MaxBet;
@@ -123,6 +131,10 @@ namespace Nancy.Simple.Model
         private int GetRiverBet(HandResult ourHand)
         {
             if (ourHand.Hand == Hand.FourOfAKind)
+            {
+                return _game.MaxBet;
+            }
+            if (ourHand.Hand == Hand.FullHouse)
             {
                 return _game.MaxBet;
             }
