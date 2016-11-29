@@ -36,6 +36,12 @@ namespace Nancy.Simple.Model
             return percentage * 100;
         }
 
+        private bool IsSameSuit(IEnumerable<EvaluatedCard> cards)
+        {
+            var flushCardGroups = cards.GroupBy(c => c.Suit).Where(g => g.ToList().Count >= 2);
+            return flushCardGroups.Any();
+
+        }
 
         private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex, int activePlayers)
         {
@@ -60,28 +66,42 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.HighCard)
             {
-                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers);
+                var isSameSuit = IsSameSuit(ourHand.Cards);
+
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers, bettingIndex, isSameSuit);
             }
 
             return 0;
         }
 
-        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers)
+        private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers, int bettingIndex, bool isSameSuit = false)
         {
             var highestCard = ourHand.Cards.FirstOrDefault();
             if (highestCard != null && highestCard.RankValue >= 13)
             {
                 if (allInPlayers <= 0 && activePlayers <= 6)
                 {
-                    var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
-
-                    if (percentageOfStack < 50)
+                    if (bettingIndex <= 3)
                     {
-                        return _game.MinBet;
+                        if (isSameSuit)
+                        {
+                            return GetMinRaiseTimes(2);
+                        }
+
+                        var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
+
+                        if (percentageOfStack < 50)
+                        {
+                            return _game.MinRaise;
+                        }
+                        else
+                        {
+                            return _game.MinBet;
+                        }
                     }
                     else
                     {
-                        return 0;
+                        return _game.MinBet;
                     }
                 }
 
@@ -166,7 +186,7 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.HighCard)
             {
-                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers);
+                return HighCardBettingStrategy(ourHand, allInPlayers, stackSize, activePlayers, bettingIndex, false);
             }
 
             return 0;
