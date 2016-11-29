@@ -154,6 +154,19 @@ namespace Nancy.Simple.Model
                 }
             }
 
+            if (activePlayers == 2)
+            {
+                var percentageOfStack = MinBetPercentageOfStack(_game.MinBet, stackSize);
+                if (percentageOfStack < 5 && bettingIndex <= 3)
+                {
+                    return _game.MinRaise;
+                }
+                else
+                {
+                    return _game.MinBet;
+                }
+            }
+
             return 0;
         }
 
