@@ -37,7 +37,7 @@ namespace Nancy.Simple.Model
         }
 
 
-        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex)
+        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex, int activePlayers)
         {
             if (ourHand.Hand == Hand.Pair)
             {
@@ -48,7 +48,7 @@ namespace Nancy.Simple.Model
                 }
                 else
                 {
-                    if (bettingIndex > 3)
+                    if (bettingIndex <= 3)
                     {
                         return _game.MinRaise;
                     }
@@ -92,7 +92,7 @@ namespace Nancy.Simple.Model
         }
 
 
-        private int GetFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex)
+        private int GetFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex, int activePlayers)
         {
             if (ourHand.Hand == Hand.StraightFlush)
             {
@@ -238,11 +238,11 @@ namespace Nancy.Simple.Model
         {
             if (bettingRound == BettingRound.PreFlop)
             {
-                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex);
+                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex, _game.ActivePlayers);
             }
             if (bettingRound == BettingRound.Flop)
             {
-                return GetFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex);
+                return GetFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex, _game.ActivePlayers);
             }
             if (bettingRound == BettingRound.Turn)
             {
