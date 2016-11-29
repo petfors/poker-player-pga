@@ -37,7 +37,7 @@ namespace Nancy.Simple.Model
         }
 
 
-        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers)
+        private int GetPreFlopBet(HandResult ourHand, int stackSize, int allInPlayers, int bettingIndex)
         {
             if (ourHand.Hand == Hand.Pair)
             {
@@ -48,7 +48,14 @@ namespace Nancy.Simple.Model
                 }
                 else
                 {
-                    return _game.MinRaise;
+                    if (bettingIndex > 3)
+                    {
+                        return _game.MinRaise;
+                    }
+                    else
+                    {
+                        return _game.MinBet;
+                    }
                 }
             }
             if (ourHand.Hand == Hand.HighCard)
@@ -103,7 +110,7 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
-                return _game.MaxBet;
+                return _game.MinRaise;
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
@@ -146,7 +153,7 @@ namespace Nancy.Simple.Model
             }
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
-                return _game.MaxBet;
+                return _game.MinRaise;
             }
             if (ourHand.Hand == Hand.TwoPair)
             {
@@ -212,7 +219,7 @@ namespace Nancy.Simple.Model
         {
             if (bettingRound == BettingRound.PreFlop)
             {
-                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count());
+                return GetPreFlopBet(ourHand, _game.OurPlayer.stack, allinPlayers.Count(), _game.BettingIndex);
             }
             if (bettingRound == BettingRound.Flop)
             {
