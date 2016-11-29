@@ -17,35 +17,41 @@ namespace Nancy.Simple
                 var gameStateObject = gameState.ToObject<GameState>();
                 var game = new Game(gameStateObject);
 
-                var handManager = new HandManager();
-                var ourHand = handManager.EvaluateHand(game.OurPlayer.hole_cards);
+                var betManager = new BetManager(new HandManager(), game);
 
-                if (ourHand.Hand == Hand.Pair)
-                {
-                    var pairRank = ourHand.Cards.Max(c => c.RankValue);
-                    if (pairRank >= 10)
-                    {
-                        return game.MaxBet;
-                    }
-                    else
-                    {
-                        return game.MinRaise;
-                    }
-                }
-                else if(ourHand.Hand == Hand.HighCard)
-                {
-                    var highestCard = ourHand.Cards.FirstOrDefault();
-                    if (highestCard != null && highestCard.RankValue >= 12)
-                    {
-                        return game.MinRaise;
-                    }
+                var currentBet = betManager.GetCurrentBet(game.OurCards);
 
-                    return 0;
-                }
-                else
-                {
-                    return 0;
-                }
+                return currentBet;
+
+                //var handManager = new HandManager();
+                //var ourHand = handManager.EvaluateHand(game.OurPlayer.hole_cards);
+
+                //if (ourHand.Hand == Hand.Pair)
+                //{
+                //    var pairRank = ourHand.Cards.Max(c => c.RankValue);
+                //    if (pairRank >= 10)
+                //    {
+                //        return game.MaxBet;
+                //    }
+                //    else
+                //    {
+                //        return game.MinRaise;
+                //    }
+                //}
+                //else if(ourHand.Hand == Hand.HighCard)
+                //{
+                //    var highestCard = ourHand.Cards.FirstOrDefault();
+                //    if (highestCard != null && highestCard.RankValue >= 12)
+                //    {
+                //        return game.MinRaise;
+                //    }
+
+                //    return 0;
+                //}
+                //else
+                //{
+                //    return 0;
+                //}
             }
             catch (Exception ex)
             {

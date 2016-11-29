@@ -22,6 +22,11 @@ namespace Nancy.Simple.Model
             }
         }
 
+        public IEnumerable<Card> OurCards
+        {
+            get { return Enumerable.Concat(OurPlayer.hole_cards, _gameState.community_cards); }
+        }
+
         public int MinBet
         {
             get
