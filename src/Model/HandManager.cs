@@ -11,6 +11,11 @@ namespace Nancy.Simple.Model
         {
             var evaluatedCard = cards.Select(c => new EvaluatedCard(c));
 
+            var straightFlush = StraightFlush(evaluatedCard);
+            if (straightFlush.Any())
+            {
+                return new HandResult() {Cards = straightFlush, Hand = Hand.StraightFlush};
+            }
 
             var fullHouse = FullHouse(evaluatedCard);
             if (fullHouse.Any())
@@ -43,6 +48,12 @@ namespace Nancy.Simple.Model
                 return new HandResult() { Cards = maxFourOfAKind, Hand = Hand.ThreeOfAKind };
             }
 
+            var twoPairs = TwoPairs(evaluatedCard);
+            if (twoPairs.Any())
+            {
+                return new HandResult() {Cards = twoPairs, Hand = Hand.TwoPair};
+            }
+
             var maxPair = Pair(evaluatedCard);
 
             if (maxPair.Any())
@@ -55,6 +66,37 @@ namespace Nancy.Simple.Model
                 Cards = new List<EvaluatedCard>() { evaluatedCard.OrderByDescending(c => c.RankValue).First() },
                 Hand = Hand.HighCard
             };
+        }
+
+        private IEnumerable<EvaluatedCard> TwoPairs(IEnumerable<EvaluatedCard> cards)
+        {
+            var maxPair = Pair(cards);
+            var remainingCards = cards.Except(maxPair);
+            var lowPair = Pair(remainingCards);
+
+            if (maxPair.Any() && lowPair.Any())
+            {
+                return Enumerable.Concat(maxPair, lowPair);
+            }
+
+            return new List<EvaluatedCard>();
+        }
+
+        private IEnumerable<EvaluatedCard> StraightFlush(IEnumerable<EvaluatedCard> cards)
+        {
+            var flush = Flush(cards);
+            var straight = Straight(cards);
+
+            if (flush.Any() && straight.Any())
+            {
+                var commonCards = flush.Intersect(straight);
+                if (commonCards.Count() >= 5)
+                {
+                    return commonCards;
+                }
+            }
+
+            return new List<EvaluatedCard>();
         }
 
         private IEnumerable<EvaluatedCard> FullHouse(IEnumerable<EvaluatedCard> cards)

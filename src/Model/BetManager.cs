@@ -60,6 +60,10 @@ namespace Nancy.Simple.Model
 
         private int GetFlopBet(HandResult ourHand)
         {
+            if (ourHand.Hand == Hand.StraightFlush)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.FourOfAKind)
             {
                 return _game.MaxBet;
@@ -79,6 +83,10 @@ namespace Nancy.Simple.Model
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
                 return _game.MaxBet;
+            }
+            if (ourHand.Hand == Hand.TwoPair)
+            {
+                return _game.MinRaise;
             }
             if (ourHand.Hand == Hand.Pair)
             {
@@ -95,6 +103,10 @@ namespace Nancy.Simple.Model
 
         private int GetTurnBet(HandResult ourHand)
         {
+            if (ourHand.Hand == Hand.StraightFlush)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.FourOfAKind)
             {
                 return _game.MaxBet;
@@ -114,6 +126,10 @@ namespace Nancy.Simple.Model
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
                 return _game.MaxBet;
+            }
+            if (ourHand.Hand == Hand.TwoPair)
+            {
+                return _game.MinRaise;
             }
             if (ourHand.Hand == Hand.Pair)
             {
@@ -130,6 +146,10 @@ namespace Nancy.Simple.Model
 
         private int GetRiverBet(HandResult ourHand)
         {
+            if (ourHand.Hand == Hand.StraightFlush)
+            {
+                return _game.MaxBet;
+            }
             if (ourHand.Hand == Hand.FourOfAKind)
             {
                 return _game.MaxBet;
@@ -149,6 +169,10 @@ namespace Nancy.Simple.Model
             if (ourHand.Hand == Hand.ThreeOfAKind)
             {
                 return _game.MaxBet;
+            }
+            if (ourHand.Hand == Hand.TwoPair)
+            {
+                return _game.MinRaise;
             }
             if (ourHand.Hand == Hand.Pair)
             {
