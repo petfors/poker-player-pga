@@ -11,7 +11,11 @@ namespace Nancy.Simple.Model
         {
             var evaluatedCard = cards.Select(c => new EvaluatedCard(c));
 
-
+            var flush = Flush(evaluatedCard);
+            if (flush.Any())
+            {
+                return new HandResult() {Cards = flush, Hand = Hand.Flush};
+            }
 
             var maxFourOfAKind = FourOfAKind(evaluatedCard);
             if (maxFourOfAKind.Any())
@@ -39,9 +43,26 @@ namespace Nancy.Simple.Model
             };
         }
 
-        //private IEnumerable<EvaluatedCard> Flush(IEnumerable<EvaluatedCard> cards)
+        private IEnumerable<EvaluatedCard> Flush(IEnumerable<EvaluatedCard> cards)
+        {
+            var flushCardGroups = cards.GroupBy(c => c.Suit).Where(g => g.ToList().Count >= 5);
+            if (flushCardGroups.Any())
+            {
+                return flushCardGroups.First().ToList();
+            }
+
+            return new List<EvaluatedCard>();
+        }
+
+        //private IEnumerable<EvaluatedCard> Straight(IEnumerable<EvaluatedCard> cards)
         //{
-            
+        //    var flushCardGroups = cards.GroupBy(c => c.Suit).Where(g => g.ToList().Count >= 5);
+        //    if (flushCardGroups.Any())
+        //    {
+        //        return flushCardGroups.First().ToList();
+        //    }
+
+        //    return new List<EvaluatedCard>();
         //}
 
         private IEnumerable<EvaluatedCard> FourOfAKind(IEnumerable<EvaluatedCard> cards)
