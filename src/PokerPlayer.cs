@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Nancy.Simple.Model;
 using Newtonsoft.Json.Linq;
 
@@ -21,6 +22,16 @@ namespace Nancy.Simple
                 if (ourHand.Hand == Hand.Pair)
                 {
                     return game.MaxBet;
+                }
+                else if(ourHand.Hand == Hand.HighCard)
+                {
+                    var highestCard = ourHand.Cards.FirstOrDefault();
+                    if (highestCard != null && highestCard.RankValue >= 12)
+                    {
+                        return game.MinRaise;
+                    }
+
+                    return 0;
                 }
                 else
                 {
