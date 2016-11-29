@@ -77,6 +77,31 @@ namespace Nancy.Simple.Model
         private int HighCardBettingStrategy(HandResult ourHand, int allInPlayers, int stackSize, int activePlayers, int bettingIndex, bool isSameSuit = false)
         {
             var highestCard = ourHand.Cards.FirstOrDefault();
+            var secondHighCard = ourHand.Cards.Skip(1).FirstOrDefault();
+
+            if (highestCard != null && secondHighCard != null)
+            {
+                if (highestCard.RankValue >= 11 && secondHighCard.RankValue >= 11)
+                {
+                    if (allInPlayers <= 0 && activePlayers <= 6)
+                    {
+                        if (bettingIndex <= 3)
+                        {
+                            if (isSameSuit)
+                            {
+                                return GetMinRaiseTimes(2);
+                            }
+
+                            return _game.MinRaise;
+                        }
+                        else
+                        {
+                            return _game.MinBet;
+                        }
+                    }
+                }
+            }
+
             if (highestCard != null && highestCard.RankValue >= 13)
             {
                 if (allInPlayers <= 0 && activePlayers <= 6)

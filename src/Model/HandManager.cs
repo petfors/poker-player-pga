@@ -63,7 +63,7 @@ namespace Nancy.Simple.Model
 
             return new HandResult()
             {
-                Cards = new List<EvaluatedCard>() { evaluatedCard.OrderByDescending(c => c.RankValue).First() },
+                Cards = new List<EvaluatedCard>() { evaluatedCard.OrderByDescending(c => c.RankValue).First(), evaluatedCard.OrderByDescending(c => c.RankValue).Skip(1).First() },
                 Hand = Hand.HighCard
             };
         }
